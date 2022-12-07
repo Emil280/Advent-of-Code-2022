@@ -17,7 +17,7 @@ while Totaled==False:
     if index==2255:
         Totaled=True
 
-for x in range(0,Elf_num-2):
+for x in range(0,len(Elf_calories)):
     if Elf_calories[x][1] > Highest_calorie_elf[1]:
         Highest_calorie_elf=Elf_calories[x]
 
