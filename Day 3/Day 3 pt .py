@@ -1,0 +1,1 @@
+Input=open("Day 3\Rucksacks.txt" , "r")
