@@ -2,6 +2,7 @@ Input=open("Day 4\Input.txt", "r")
 Pairs=Input.readlines()
 Overlaps=0
 for Pair in Pairs:
+    Overlap=0
     Pair=Pair.replace("\n","")
     Seperated_Pair=Pair.split(',')
     Elf_1_range=Seperated_Pair[0].split('-')
@@ -12,11 +13,11 @@ for Pair in Pairs:
         Elf_1.append(x)
     for x in range(int(Elf_2_range[0]),int(Elf_2_range[1])+1):
         Elf_2.append(x)
-    if Elf_2[0] in Elf_1 and Elf_2[-1] in Elf_1:
+    for task1 in Elf_1:
+        for task2 in Elf_2:
+            if task1==task2: 
+                Overlap+=1
+    if Overlap != 0:
         Overlaps+=1
-    elif Elf_1[0] in Elf_2 and Elf_1[-1] in Elf_2:
-        Overlaps+=1
-    else:
-        pass
     
 print(Overlaps)
