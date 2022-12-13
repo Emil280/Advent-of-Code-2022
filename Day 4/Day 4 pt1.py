@@ -4,8 +4,10 @@ Overlaps=0
 for Pair in Pairs:
     Pair=Pair.replace("\n","")
     Seperated_Pair=Pair.split(',')
-    Elf_1_range=Seperated_Pair[0].split('-')
-    Elf_2_range=Seperated_Pair[1].split('-')
+    Elf_1=Seperated_Pair[0]
+    Elf_2=Seperated_Pair[1]
+    Elf_1_range=Elf_1.split('-')
+    Elf_2_range=Elf_2.split('-')
     Elf_1=[]
     Elf_2=[]
     for x in range(int(Elf_1_range[0]),int(Elf_1_range[1])+1):
