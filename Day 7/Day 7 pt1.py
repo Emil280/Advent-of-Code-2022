@@ -20,10 +20,7 @@ class Directory_Node():
         self.Parent=parent 
 
     def Get_Parent(self):
-        if self.Parent:
-            return self.Parent
-        else:
-            return None
+        return self.Parent
 
     def Add_Children(self,Child):
         self.Children.append(Child)
@@ -49,11 +46,18 @@ class Directory_Node():
 
     def Get_Folder_Size(self):
         if self.Folder:
+            return self.Size
+
+    def Calculate_Folder_Size(self):
+        if self.Folder:
             Size=0
             for Child in self.Children:
-                Size=Size+(Child.Get_File_Size())
+                if Child.File:
+                    Size=Size+(Child.Get_File_Size())
+                elif Child.Folder:
+                    Size=Size+(Child.Calculate_Folder_Size())
+            self.Set_Size(Size)
             return Size
-        return 0
 
     def Set_Name(self,Name):
         self.Name=Name
@@ -72,12 +76,22 @@ class Directory_Node():
     def Print_File_Structure(self):
             spaces=" " * self.Get_level()
             prefix=spaces + "--" if self.Parent else ""
-            if self.File:
-                print(prefix , self.Name , " " , self.Size)
-            elif self.Folder:
-                print(prefix + self.Name)
+            if self.Folder:
+                print(prefix, self.Name, "(Dir)", self.Size)
                 for Child in self.Children:
                     Child.Print_File_Structure()
+            elif self.File:
+                print(prefix , self.Name , " " , self.Size)
+
+    def Sum_of_Folders_Under_100000(self):
+        Total=0
+        if self.Folder:
+            for Child in self.Children:
+                if Child.Folder:
+                    Total=Total+(Child.Sum_of_Folders_Under_100000())
+            if self.Get_Folder_Size() <= 100000:
+                Total=Total+self.Get_Folder_Size()
+            return Total
 
 
 Root=Directory_Node('Root',None,True)
@@ -87,25 +101,22 @@ Parent=Root
 for i in range (1,(len(CMD))):
     line=CMD[i]
     line=line.replace("\n","")
-    if "dir" in line:
-            Folder_Name=line[4:]
-            if Folder_Name not in Names: 
-                if Names[Folder_Name] not in (Parent).Children:
-                    Names[Folder_Name]=Directory_Node(Name,Parent,True)
-                    (Parent).Add_Children((Names[Folder_Name]))
-    elif "$" in line:
+    if "$" in line:
         if "cd" in line:
             if ".." in line:
-                Parent=(Names[Name]).Get_Parent()
+                Parent=((Parent).Get_Parent())
             else:
                 Name=line[5:]
                 Names[Name]=Directory_Node(Name,Parent,True)
                 (Parent).Add_Children((Names[Name]))
-                Parent=Names[Name]
-    else:
-        Size=line.split(" ")[0]
+                Parent=(Names[Name])
+    elif "dir" not in line:
+        Size=int(line.split(" ")[0])
         File_Name=line.split(" ")[1]
         Names[File_Name]=Directory_Node(File_Name,Parent,False)
         (Parent).Add_Children(Names[File_Name])
         (Names[File_Name]).Set_Size(Size)
+Root.Calculate_Folder_Size()
 Root.Print_File_Structure()
+No_of_Folders=Root.Sum_of_Folders_Under_100000()
+print(No_of_Folders)
