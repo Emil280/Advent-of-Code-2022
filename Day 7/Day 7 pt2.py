@@ -83,16 +83,28 @@ class Directory_Node():
             elif self.File:
                 print(prefix , self.Name , " " , self.Size)
 
-    def Sum_of_Folders_Under_100000(self):
-        Total=0
+    def Find_Folders_For_Deletion(self,TargetSize):
+        Folders=[]
         if self.Folder:
             for Child in self.Children:
                 if Child.Folder:
-                    Total=Total+(Child.Sum_of_Folders_Under_100000())
-            if self.Get_Folder_Size() <= 100000:
-                Total=Total+self.Get_Folder_Size()
-            return Total
+                    if Child.Get_Folder_Size() >= TargetSize:
+                        Folders_in_Child=Child.Find_Folders_For_Deletion(TargetSize)
+                        for Folder in Folders_in_Child:
+                            Folders.append(Folder)
+            if self.Get_Folder_Size() >= TargetSize:
+                Folders.append(self)
+            return Folders
 
+    def Select_Folder_For_Deletion(self,Folders):
+        Sorted_Folders = sorted(Folders, key=lambda x: x.Size)
+        Folder_To_Delete=Sorted_Folders[0]
+        return Folder_To_Delete
+
+    def Free_Up_Space(self,TargetSize):
+        Potential_Target_Folders=self.Find_Folders_For_Deletion(TargetSize)
+        Folder=self.Select_Folder_For_Deletion(Potential_Target_Folders)
+        print(f"Delete directory named : {Folder.Name} to free up {Folder.Size}")
 
 #Setting up Root node (/)
 Root=Directory_Node('Root',None,True)
@@ -123,9 +135,8 @@ for i in range (1,(len(CMD))):
 #Calculating the Size of all the folders
 Root.Calculate_Folder_Size()
 
-#Visualising the Storage 
-Root.Print_File_Structure()
 
-#Finding the total size of folders that are at most 100000
-No_of_Folders=Root.Sum_of_Folders_Under_100000()
-print(No_of_Folders)
+Root.Print_File_Structure()
+Free_Storage=70000000-Root.Get_Folder_Size()
+Storage_Needed=-(Free_Storage-30000000)
+Root.Free_Up_Space(Storage_Needed)

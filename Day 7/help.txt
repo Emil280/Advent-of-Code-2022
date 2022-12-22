@@ -2,3 +2,4 @@ help with:
 varying variable names : https://stackoverflow.com/questions/70040400/set-instance-variable-name-based-on-argument-passed-in-python-class
 General Trees in python : https://youtu.be/4r_XR9fUPhQ
 logic behind a potential solution: https://www.youtube.com/watch?v=rYaGods3JKU&ab_channel=TurkeyDev
+sorting lists/arrays containging objects using attributes https://stackoverflow.com/questions/403421/how-to-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
